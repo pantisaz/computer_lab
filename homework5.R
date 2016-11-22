@@ -10,7 +10,7 @@ ridge.reg <- function(y, X, lambda){
   return( solve( t(X)%*%X+lambda*diag(ncol(X)) , t(X)%*%y )) 
 }
 
-lasso.shooting <- function(y, X, lambda){
+lasso.reg <- function(y, X, lambda){
   
   max.iter <- 10; 
   P <- ncol(X);
@@ -36,6 +36,7 @@ cross.validation <- function (y, X, lambda, pen.reg){
   
   data <- cbind(y,X)
   folds <- cut(seq(1,nrow(data)),breaks=5,labels=FALSE)
+  RSS <- rep(0,5)
 
   for(i in 1:5){
     #Segement data by fold using the which() function 
@@ -50,13 +51,13 @@ cross.validation <- function (y, X, lambda, pen.reg){
     beta <- lasso.reg(trainData$y, trainData[,2:ncol(trainData)], lambda)  
     }
     
-    
-    
-  
-  
+    y.test <- testData$y
+    X.test <- testData[,2:ncol(testData)]
+      
+    RSS[i] <- t((y.test - X.test %*% beta)) * (y.test - X.test %*% beta)
     
   }
-  
+  return( mean (RSS))
   
 }
 
