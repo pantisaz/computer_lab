@@ -45,12 +45,8 @@ cross.validation <- function (y, X, lambda, pen.reg){
     testData <- data[testIndexes, ]
     trainData <- data[-testIndexes, ]
     
-    if (pen.reg == "ridge.reg") {
-    beta <- ridge.reg(trainData[,1], trainData[,2:ncol(trainData)], lambda)
-    }
-    else if (pen.reg == "lasso.reg"){
-    beta <- lasso.reg(trainData[,1], trainData[,2:ncol(trainData)], lambda)  
-    }
+    beta <- pen.reg(trainData[,1], trainData[,2:ncol(trainData)], lambda)
+    
 # Calculate RSS   
     y.test <- testData[,1]
     X.test <- testData[,2:ncol(testData)]
@@ -58,7 +54,7 @@ cross.validation <- function (y, X, lambda, pen.reg){
     RSS[i] <- t((y.test - X.test %*% beta)) %*% (y.test - X.test %*% beta)
     
   }
-  return( mean (RSS))
+  return(mean (RSS))
   
 }
 # fin
